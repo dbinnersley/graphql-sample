@@ -3,6 +3,7 @@ version: "2"
 services:
   gql:
     build: .
+    container_name: "gql"
     command: "go run entry.go"
     ports:
       - "8090:8090"
@@ -10,10 +11,18 @@ services:
       - ".:/go/src/github.com/dbinnersley/graphql-sample"
     links:
       - mysql
+      - mongo
 
   mysql:
     image : mysql:5.7
+    container_name: "mysql"
     environment:
       MYSQL_ALLOW_EMPTY_PASSWORD : "yes"
     ports:
       - "3306:3306"
+
+  mongo:
+      image : mongo:3.4.1
+      container_name: "mongo"
+      ports:
+        - "27019:27019"
