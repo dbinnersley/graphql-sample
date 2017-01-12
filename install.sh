@@ -3,9 +3,9 @@
 #Note this install assumes that the mysql and mongo containers are already running via docker-compose
 
 #This initializes mysql with some sample data
-docker-compose exec mysql mysql -e 'CREATE DATABASE graphql_sample;'
-docker-compose exec mysql mysql -e 'CREATE TABLE graphql_sample.user (id VARCHAR(20) unique, name VARCHAR(20), height int, weight int);'
-docker-compose exec mysql mysql -e 'INSERT INTO graphql_sample.user (id, name, height, weight) VALUES
+docker-compose exec mysql mysql -h mysql -e 'CREATE DATABASE graphql_sample;'
+docker-compose exec mysql mysql -h mysql -e 'CREATE TABLE graphql_sample.user (id VARCHAR(20) unique, name VARCHAR(20), height int, weight int);'
+docker-compose exec mysql mysql -h mysql -e 'INSERT INTO graphql_sample.user (id, name, height, weight) VALUES
                                 ("1","Derek", 10,100),
                                 ("2","Cory", 11,90),
                                 ("3","Brett", 12,80),

@@ -1,29 +1,6 @@
 package service
 
-import "database/sql"
 import "github.com/dbinnersley/graphql-sample/model"
-
-
-var Users = []model.User{
-	model.User{
-		Id: "1",
-		Name:"Derek",
-		Height: 71,
-		Weight: 155,
-	},
-	model.User{
-		Id: "2",
-		Name:"Derek2",
-		Height: 70,
-		Weight: 150,
-	},
-	model.User{
-		Id: "3",
-		Name:"Derek3",
-		Height: 72,
-		Weight: 145,
-	},
-}
 
 var Posts = []model.Post{
 	model.Post{
@@ -43,54 +20,6 @@ var Posts = []model.Post{
 	},
 }
 
-
-
-type UserService interface{
-	GetUserById(string) *model.User
-}
-
-type MemoryUserService struct{
-	Users []model.User
-}
-
-func (m *MemoryUserService) GetUserById(userid string) (*model.User, error){
-	for _,user := range m.Users{
-		if user.Id == userid{
-			return &user, nil
-		}
-	}
-	return nil, nil
-}
-
-type MysqlUserService struct{
-	DB *sql.DB
-}
-
-//This uses the sql to make the query for a user by id
-func (m *MysqlUserService) GetUserById(userid string) (*model.User, error){
-	prep,_ := m.DB.Prepare("Select * from user where id = ?")
-
-	result, err := prep.Query(userid)
-
-	defer result.Close()
-
-	if err != nil{
-		panic(err)
-	}
-
-	user := model.User{}
-
-	hasnext := result.Next()
-	if hasnext == true {
-		err = result.Scan(&user.Id, &user.Name, &user.Height, &user.Weight)
-		if err != nil {
-			panic(err)
-		}
-	}
-
-	return &user, nil
-
-}
 
 //////////////////////////////////////////////
 //Post services into the actual data retrieval
@@ -124,4 +53,3 @@ func (m* MemoryPostService) GetPostsByUser(userId string) ([]*model.Post, error)
 	}
 	return results, nil
 }
-

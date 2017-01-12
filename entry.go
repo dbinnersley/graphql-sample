@@ -7,21 +7,12 @@ import (
 	"github.com/dbinnersley/graphql-sample/service"
 	"github.com/dbinnersley/graphql-sample/model"
 
-
-	"database/sql"
-	_ "github.com/go-sql-driver/mysql"
 )
-
 
 func main(){
 
-	db,err := sql.Open("mysql", "root@tcp(mysql:3306)/graphql_sample")
-	if err != nil{
-		panic(err)
-	}
-	userservice := service.MysqlUserService{DB:db}
 
-	//userservice := MemoryUserService{users:users}
+	userservice := service.CreateUserService("mysql", "root@tcp(mysql:3306)/graphql_sample")
 	postservice := service.MemoryPostService{Posts:service.Posts}
 
 	userType := graphql.NewObject(graphql.ObjectConfig{
