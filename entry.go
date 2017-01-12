@@ -4,124 +4,25 @@ import (
 	"net/http"
 	"github.com/graphql-go/graphql"
 	"github.com/graphql-go/handler"
+	"github.com/dbinnersley/graphql-sample/service"
+	"github.com/dbinnersley/graphql-sample/model"
+
+
+	"database/sql"
+	_ "github.com/go-sql-driver/mysql"
 )
 
 
-type User struct{
-	Id string	`json:"id"`//Id of the user
-	Name string	`json:"name"`//Name of the user
-	Height int	`json:"height"`//Height of the user
-	Weight int	`json:"weight"`//Weight of the user
-}
-
-type Post struct{
-	Id string	`json:"id" bson:"_id"`		//Id of the user
-	Content string	`json:"content" bson:"content"` //Name of the user
-	UserId string	`json:"userid" bson:"userid"`   //UserId of which the user belongs
-}
-
-//////////////////////////////////////////////
-//User services into the actual data retrieval
-//////////////////////////////////////////////
-
-type UserService interface{
-	GetUserById(string) *User
-}
-
-type MemoryUserService struct{
-	users []User
-}
-
-func (m *MemoryUserService) GetUserById(userid string) (*User, error){
-	for _,user := range m.users{
-		if user.Id == userid{
-			return &user, nil
-		}
-	}
-	return nil, nil
-}
-
-//////////////////////////////////////////////
-//Post services into the actual data retrieval
-//////////////////////////////////////////////
-
-type PostService interface{
-	GetPostById(string) *Post
-	GetPostsByUser(string) []*Post
-}
-
-type MemoryPostService struct{
-	posts []Post
-}
-
-func (m* MemoryPostService) GetPostById(postId string) (*Post, error){
-	for _, post := range m.posts{
-		if post.Id == postId{
-			return &post, nil
-		}
-	}
-	return nil, nil
-}
-
-func (m* MemoryPostService) GetPostsByUser(userId string) ([]*Post, error){
-	results := make([]*Post,0)
-	for index, _ := range m.posts{
-		if m.posts[index].UserId == userId{
-			results = append(results, &m.posts[index])
-		}
-
-	}
-	return results, nil
-}
-
-
-
-//////////////////////////////////////////////
-//Post services into the actual data retrieval
-//////////////////////////////////////////////
-
 func main(){
 
-	users := []User{
-		User{
-			Id: "1",
-			Name:"Derek",
-			Height: 71,
-			Weight: 155,
-		},
-		User{
-			Id: "2",
-			Name:"Derek2",
-			Height: 70,
-			Weight: 150,
-		},
-		User{
-			Id: "3",
-			Name:"Derek3",
-			Height: 72,
-			Weight: 145,
-		},
+	db,err := sql.Open("mysql", "root@tcp(mysql:3306)/graphql_sample")
+	if err != nil{
+		panic(err)
 	}
-	posts := []Post{
-		Post{
-			Id: "1",
-			Content: "This is the content of the first post",
-			UserId: "1",
-		},
-		Post{
-			Id: "2",
-			Content: "This is the content of the second post",
-			UserId: "2",
-		},
-		Post{
-			Id: "3",
-			Content: "What are you looking at me for!!!",
-			UserId: "2",
-		},
-	}
+	userservice := service.MysqlUserService{DB:db}
 
-	userservice := MemoryUserService{users:users}
-	postservice := MemoryPostService{posts:posts}
+	//userservice := MemoryUserService{users:users}
+	postservice := service.MemoryPostService{Posts:service.Posts}
 
 	userType := graphql.NewObject(graphql.ObjectConfig{
 		Name:"User",
@@ -159,7 +60,7 @@ func main(){
 	postType.AddFieldConfig("user", &graphql.Field{
 		Type:userType,
 		Resolve: func (params graphql.ResolveParams) (interface{}, error){
-			idQuery := params.Source.(*Post).Id
+			idQuery := params.Source.(*model.Post).UserId
 			return userservice.GetUserById(idQuery)
 		},
 	})
@@ -168,7 +69,7 @@ func main(){
 	userType.AddFieldConfig("posts", &graphql.Field{
 		Type:graphql.NewList(postType),
 		Resolve: func (params graphql.ResolveParams) (interface{}, error){
-			userId := params.Source.(*User).Id
+			userId := params.Source.(*model.User).Id
 			return postservice.GetPostsByUser(userId)
 		},
 	})
