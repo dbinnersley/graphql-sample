@@ -15,9 +15,9 @@ type User struct{
 }
 
 type Post struct{
-	Id string	`json:"id"`//Id of the user
-	Content string	`json:"content"`//Name of the user
-	UserId string	`json:"userid"`
+	Id string	`json:"id" bson:"_id"`		//Id of the user
+	Content string	`json:"content" bson:"content"` //Name of the user
+	UserId string	`json:"userid" bson:"userid"`   //UserId of which the user belongs
 }
 
 //////////////////////////////////////////////
