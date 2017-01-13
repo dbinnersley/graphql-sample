@@ -19,6 +19,10 @@ docker-compose exec mongo mongo graphql_sample --eval 'db.post.insert({"_id":"4"
 docker-compose exec mongo mongo graphql_sample --eval 'db.post.createIndex({"userid":1})'
 
 
-#TODO: Create an elasticsearch backend
-
-#TODO: Create a cassandra backend
+#This will do a bunch of inserts into cassandra!!!
+docker-compose exec cassandra cqlsh -e "CREATE KEYSPACE graphql_sample WITH REPLICATION = { 'class' : 'SimpleStrategy', 'replication_factor' : 1 };"
+docker-compose exec cassandra cqlsh -e "CREATE TABLE graphql_sample.comment_by_id (id VARCHAR PRIMARY KEY, content VARCHAR, authorid VARCHAR, postid VARCHAR);"
+docker-compose exec cassandra cqlsh -e "insert into graphql_sample.comment_by_id(id,content,authorid,postid) values ('1','First content','1','1');"
+docker-compose exec cassandra cqlsh -e "insert into graphql_sample.comment_by_id(id,content,authorid,postid) values ('2','AWESOME!!!!!!','2','3');"
+docker-compose exec cassandra cqlsh -e "insert into graphql_sample.comment_by_id(id,content,authorid,postid) values ('3','Why are we doing this....','4','2');"
+docker-compose exec cassandra cqlsh -e "insert into graphql_sample.comment_by_id(id,content,authorid,postid) values ('4','Nothing better','4','3');"

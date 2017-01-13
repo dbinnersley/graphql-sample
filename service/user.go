@@ -78,7 +78,7 @@ func (m *MemoryUserService) GetUserById(userid string) (interface{}, error){
 
 
 ////////////////////////////////////////
-// Memory User Service Values
+// Mysql User Service Values
 ////////////////////////////////////////
 
 

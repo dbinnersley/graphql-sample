@@ -22,7 +22,14 @@ services:
       - "3306:3306"
 
   mongo:
-      image : mongo:3.4.1
-      container_name: "mongo"
-      ports:
-        - "27019:27019"
+    image : mongo:3.4.1
+    container_name: "mongo"
+    ports:
+      - "27019:27019"
+
+  cassandra:
+    image: cassandra:3.9
+    container_name: "cassandra"
+    ports:
+      - "7199:7199"
+      - "9042:9042"
