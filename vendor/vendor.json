@@ -89,6 +89,36 @@
 			"path": "golang.org/x/net/context",
 			"revision": "60c41d1de8da134c05b7b40154a9a82bf5b7edb9",
 			"revisionTime": "2017-01-10T03:16:11Z"
+		},
+		{
+			"checksumSHA1": "1D8GzeoFGUs5FZOoyC2DpQg8c5Y=",
+			"path": "gopkg.in/mgo.v2",
+			"revision": "3f83fa5005286a7fe593b055f0d7771a7dce4655",
+			"revisionTime": "2016-08-18T02:01:20Z"
+		},
+		{
+			"checksumSHA1": "YsB2DChSV9HxdzHaKATllAUKWSI=",
+			"path": "gopkg.in/mgo.v2/bson",
+			"revision": "3f83fa5005286a7fe593b055f0d7771a7dce4655",
+			"revisionTime": "2016-08-18T02:01:20Z"
+		},
+		{
+			"checksumSHA1": "XQsrqoNT1U0KzLxOFcAZVvqhLfk=",
+			"path": "gopkg.in/mgo.v2/internal/json",
+			"revision": "3f83fa5005286a7fe593b055f0d7771a7dce4655",
+			"revisionTime": "2016-08-18T02:01:20Z"
+		},
+		{
+			"checksumSHA1": "LEvMCnprte47qdAxWvQ/zRxVF1U=",
+			"path": "gopkg.in/mgo.v2/internal/sasl",
+			"revision": "3f83fa5005286a7fe593b055f0d7771a7dce4655",
+			"revisionTime": "2016-08-18T02:01:20Z"
+		},
+		{
+			"checksumSHA1": "+1WDRPaOphSCmRMxVPIPBV4aubc=",
+			"path": "gopkg.in/mgo.v2/internal/scram",
+			"revision": "3f83fa5005286a7fe593b055f0d7771a7dce4655",
+			"revisionTime": "2016-08-18T02:01:20Z"
 		}
 	],
 	"rootPath": "github.com/dbinnersley/graphql-sample"

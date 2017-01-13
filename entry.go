@@ -6,14 +6,16 @@ import (
 	"github.com/graphql-go/handler"
 	"github.com/dbinnersley/graphql-sample/service"
 	"github.com/dbinnersley/graphql-sample/model"
-
 )
 
 func main(){
 
 
+	//Can create any type of service for accessing users really, but here we use mysql
 	userservice := service.CreateUserService("mysql", "root@tcp(mysql:3306)/graphql_sample")
-	postservice := service.MemoryPostService{Posts:service.Posts}
+
+	//This is the service that uses mongodb for
+	postservice := service.CreatePostService("mongodb", "mongodb://mongo:27017/graphql_sample")
 
 	userType := graphql.NewObject(graphql.ObjectConfig{
 		Name:"User",
@@ -77,8 +79,11 @@ func main(){
 					},
 				},
 				Resolve: func (params graphql.ResolveParams) (interface{}, error){
-					idQuery := params.Args["id"].(string)
-					return userservice.GetUserById(idQuery)
+					idQuery, ok := params.Args["id"].(string)
+					if ok == true {
+						return userservice.GetUserById(idQuery)
+					}
+					return nil, nil
 				},
 			},
 			"post": &graphql.Field{
@@ -89,8 +94,11 @@ func main(){
 					},
 				},
 				Resolve: func (params graphql.ResolveParams) (interface{}, error){
-					idQuery := params.Args["id"].(string)
-					return postservice.GetPostById(idQuery)
+					idQuery, ok := params.Args["id"].(string)
+					if ok == true {
+						return postservice.GetPostById(idQuery)
+					}
+					return nil, nil
 				},
 
 			},

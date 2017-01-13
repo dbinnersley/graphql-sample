@@ -10,7 +10,7 @@ import (
 //Interface to the actual user service
 //This defines the actions that able to happen to get user objects
 type UserService interface{
-	GetUserById(string) (*model.User, error)
+	GetUserById(string) (interface{}, error)
 }
 
 //Constructor for the user service
@@ -26,6 +26,7 @@ func CreateUserService(servicetype string, connstring string) UserService{
 			panic(err)
 		}
 		userservice = &SqlUserService{DB:db}
+		break
 	default:
 		panic("Invalid servicetype specified")
 	}
@@ -33,6 +34,9 @@ func CreateUserService(servicetype string, connstring string) UserService{
 
 }
 
+////////////////////////////////////////
+// Memory User Service Values
+////////////////////////////////////////
 
 //Default constant for a memory value. Not exported, so it is private to the services
 var users = []model.User{
@@ -63,7 +67,7 @@ type MemoryUserService struct{
 
 
 //Get the User by Id using the memory service
-func (m *MemoryUserService) GetUserById(userid string) (*model.User, error){
+func (m *MemoryUserService) GetUserById(userid string) (interface{}, error){
 	for _,user := range m.Users{
 		if user.Id == userid{
 			return &user, nil
@@ -72,14 +76,25 @@ func (m *MemoryUserService) GetUserById(userid string) (*model.User, error){
 	return nil, nil
 }
 
+
+////////////////////////////////////////
+// Memory User Service Values
+////////////////////////////////////////
+
+
 //Service with a SQL backend
 type SqlUserService struct{
 	DB *sql.DB
 }
 
-//This uses the sql to make the query for a user by id
-func (m *SqlUserService) GetUserById(userid string) (*model.User, error){
-	prep,_ := m.DB.Prepare("Select * from user where id = ?")
+//This uses the sql to make the query for a user by id. Returns a user model if found, else nil
+func (m *SqlUserService) GetUserById(userid string) (interface{}, error){
+
+	prep,err := m.DB.Prepare("Select * from user where id = ?")
+
+	if err != nil{
+		panic(err)
+	}
 
 	result, err := prep.Query(userid)
 
@@ -89,7 +104,7 @@ func (m *SqlUserService) GetUserById(userid string) (*model.User, error){
 		panic(err)
 	}
 
-	user := model.User{}
+	var user *model.User = &model.User{}
 
 	hasnext := result.Next()
 	if hasnext == true {
@@ -97,9 +112,11 @@ func (m *SqlUserService) GetUserById(userid string) (*model.User, error){
 		if err != nil {
 			panic(err)
 		}
+	}else{
+		return nil, nil
 	}
 
-	return &user, nil
+	return user, nil
 
 }
 

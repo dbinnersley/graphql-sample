@@ -17,3 +17,8 @@ docker-compose exec mongo mongo graphql_sample --eval 'db.post.insert({"_id":"2"
 docker-compose exec mongo mongo graphql_sample --eval 'db.post.insert({"_id":"3", "content":"Be vewwy vewwy quiet", "userid": "2"})'
 docker-compose exec mongo mongo graphql_sample --eval 'db.post.insert({"_id":"4", "content":"Oh la la!!!", "userid": "2"})'
 docker-compose exec mongo mongo graphql_sample --eval 'db.post.createIndex({"userid":1})'
+
+
+#TODO: Create an elasticsearch backend
+
+#TODO: Create a cassandra backend
