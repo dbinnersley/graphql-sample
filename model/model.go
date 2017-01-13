@@ -17,8 +17,8 @@ type Post struct{
 
 //Basic data structure for a comment
 type Comment struct{
-	Id string	`json:"id"`
+	Id      string	`json:"id"`
 	Content string 	`json:"content"`
-	PostId string	`json:"postid"`
-	AuthorId string `json:"authorid"`
+	PostId  string	`json:"postid"`
+	UserId  string  `json:"userid"`
 }
