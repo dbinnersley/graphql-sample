@@ -17,6 +17,9 @@ func main(){
 	//This is the service that uses mongodb for
 	postservice := service.CreatePostService("mongodb", "mongodb://mongo:27017/graphql_sample")
 
+	//This is the service for accessing the comments. Currently from memory
+	commentservice := service.CreateCommentService("memory", "")
+
 	userType := graphql.NewObject(graphql.ObjectConfig{
 		Name:"User",
 		Fields: graphql.Fields{
@@ -50,6 +53,24 @@ func main(){
 		},
 	})
 
+	commentType := graphql.NewObject(graphql.ObjectConfig{
+		Name: "Comment",
+		Fields: graphql.Fields{
+			"id": &graphql.Field{
+				Type:graphql.ID,
+			},
+			"content": &graphql.Field{
+				Type:graphql.String,
+			},
+			"postid": &graphql.Field{
+				Type:graphql.ID,
+			},
+			"authorid": &graphql.Field{
+				Type:graphql.ID,
+			},
+		},
+	})
+
 	postType.AddFieldConfig("user", &graphql.Field{
 		Type:userType,
 		Resolve: func (params graphql.ResolveParams) (interface{}, error){
@@ -57,6 +78,7 @@ func main(){
 			return userservice.GetUserById(idQuery)
 		},
 	})
+
 
 
 	userType.AddFieldConfig("posts", &graphql.Field{
@@ -97,6 +119,22 @@ func main(){
 					idQuery, ok := params.Args["id"].(string)
 					if ok == true {
 						return postservice.GetPostById(idQuery)
+					}
+					return nil, nil
+				},
+
+			},
+			"comment": &graphql.Field{
+				Type:commentType,
+				Args:graphql.FieldConfigArgument{
+					"id" : &graphql.ArgumentConfig{
+						Type:graphql.ID,
+					},
+				},
+				Resolve: func (params graphql.ResolveParams) (interface{}, error){
+					idQuery, ok := params.Args["id"].(string)
+					if ok == true {
+						return commentservice.GetCommentById(idQuery)
 					}
 					return nil, nil
 				},
