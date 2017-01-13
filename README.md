@@ -1,10 +1,10 @@
 # graphql-sample
 
-This is a sample application that uses the golang
+This is a sample application I spent a couple days working on that uses the golang
 implementation of the graphql specification, Its a simple application
 that was used for testing new things in the language and testing out
-connections to several databases and how joins can be done on the
-application side of things.
+connections to several databases and how data graphs can be created across
+different backends.
 
 
 This sample application uses three different models and represents a sample message board.
@@ -14,6 +14,7 @@ There are three different model and each is stored used a different database:
 2. Message  -> Mongodb
 3. Comment -> Cassandra (Note this is actually really inefficent the way I have it)
 
+#####NOTE: The actual go application is running inside of the build environment. It would be built seperately when actually deployed.
 
 ###Setup:
 
@@ -27,7 +28,13 @@ Wait about 10 seconds for the databases to startup the run the following to seed
 bash install.sh
 ```
 
+###Startup:
+To start up all the services that are required to get the application to run,
+run the following command
 
+```
+docker-compose up -d
+```
 
 ###Requesting:
 
@@ -48,4 +55,11 @@ Post a message to http://localhost:8090/graphql using the "Content-type:applicat
      }
    }
  }
+```
+
+###Shutdown
+
+When you are done playing with everything, run the following:
+```
+docker-compose stop
 ```
